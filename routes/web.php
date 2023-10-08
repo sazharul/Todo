@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SomethingController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/something', [SomethingController::class, 'something']);
+
+
+
+
+Route::get('/', [AdminController::class, 'index']);
+Route::get('/name', [AdminController::class, 'name']);
+
+Route::post('/task-store', [TaskController::class, 'store'])->name('task.store');
+Route::get('/task/{id}', [TaskController::class, 'destroy'])->name('task.destroy');
+
+
+Auth::routes();
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
