@@ -12,15 +12,44 @@ class TaskController extends Controller
     {
         $task = $request->task;
         Task::create([
-           'user_id' => Auth::user()->id,
-           'task' => $task,
-           'status' => 0
+            'user_id' => Auth::user()->id,
+            'task' => $task,
+            'status' => 0
         ]);
         return to_route('home');
     }
-    public function destroy($id){
-        $task = Task::findOrFail($id);
-        $task->delete();
+
+    public function destroy($id)
+    {
+        $task = Task::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        if (isset($task)) {
+            $task->delete();
+        }
         return to_route('home');
+    }
+
+    public function edit($id)
+    {
+        $task_list = Task::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->get();
+        $task = Task::findOrFail($id);
+        return view('home', compact('task', 'task_list'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $task = $request->task;
+        $task_find = Task::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        if (isset($task_find)) {
+            $task_find->update([
+                'task' => $task
+            ]);
+        }
+
+        return to_route('home');
+    }
+
+    public function status_update(Request $request)
+    {
+        return $request->all();
     }
 }
