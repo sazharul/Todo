@@ -47,6 +47,18 @@ class TaskController extends Controller
 
         return to_route('home');
     }
+    public function update_status(Request $request, $id)
+    {
+        $status = $request->status;
+        $task_find = Task::where('id', $id)->where('user_id', Auth::user()->id)->first();
+        if (isset($task_find)) {
+            $task_find->update([
+                'status' => $status
+            ]);
+        }
+
+        return 'success';
+    }
 
     public function status_update(Request $request)
     {
